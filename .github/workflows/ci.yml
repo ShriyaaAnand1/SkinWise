@@ -1,0 +1,86 @@
+name: SkinWise CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  # Job 1: Frontend Unit Tests
+  frontend-unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Run Unit Tests
+        run: npx jest src/tests/recommendation.test.js --forceExit
+
+  # Job 2: System Tests
+  system-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Run System Tests
+        run: npx jest src/tests/system.test.js --forceExit
+
+  # Job 3: Backend Integration Tests
+  backend-integration-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          npm install --legacy-peer-deps
+
+      - name: Run Integration Tests
+        run: |
+          cd backend
+          npx jest tests/api.test.js --forceExit
+ 
+
+  # Job 4: ML Performance Tests
+  ml-performance-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: pip install pytest scikit-learn numpy pandas scipy
+
+      - name: Run ML Tests
+        run: python -m pytest backend/tests/test_ml.py -v
