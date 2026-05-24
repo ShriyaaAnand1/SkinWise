@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "SkinWise",
+  "version": "1.0",
+  "description": "SkinWise Sidebar Extension",
+
+  "permissions": ["activeTab", "scripting"],
+
+  "host_permissions": [
+    "https://*.amazon.in/*",
+    "https://*.amazon.com/*",
+    "https://*.nykaa.com/*",
+    "http://localhost:3001/*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.amazon.in/*",
+        "https://*.amazon.com/*",
+        "https://*.nykaa.com/*"
+      ],
+      "js": ["extractor.js", "content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "web_accessible_resources": [
+    {
+      "resources": ["*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
